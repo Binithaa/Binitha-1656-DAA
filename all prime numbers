@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+void generatePrimes(int limit) {
+    bool prime[limit+1];
+    int i, j;
+    for (i = 2; i <= limit; i++) {
+        prime[i] = true;
+    }
+    for (i = 2; i * i <= limit; i++) {
+        if (prime[i]) {
+            for (j = i * i; j <= limit; j += i) {
+                prime[j] = false;
+            }
+        }
+    }
+    printf("Prime numbers up to %d are:\n", limit);
+    for (i = 2; i <= limit; i++) {
+        if (prime[i]) {
+            printf("%d ", i);
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int limit;
+    
+    printf("Enter the limit to generate prime numbers up to: ");
+    scanf("%d", &limit);
+
+    generatePrimes(limit);
+
+    return 0;
+}
+
