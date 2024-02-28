@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define MAXCITIES 10
+int n;
+int graph[MAXCITIES][MAXCITIES];
+int minCost = INT_MAX;
+int optimalPath[MAXCITIES];
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+int calculateCost(int path[]) {
+    int cost = 0;
+    for (int i = 0; i < n; i++) {
+        cost += graph[path[i]][path[(i + 1) % n]];
+    }
+    return cost;
+}
+
+void tspBranchAndBound(int path[], int depth) {
+    if (depth == n) {
+        int currentCost = calculateCost(path);
+        if (currentCost < minCost) {
+            minCost = currentCost;
+            for (int i = 0; i < n; i++) {
+                optimalPath[i] = path[i];
+            }
+        }
+        return;
+    }
+    for (int i = depth; i < n; i++) {
+        swap(&path[depth], &path[i]);
+        int currentCost = calculateCost(path);
+		       if (currentCost < minCost) {
+            tspBranchAndBound(path, depth + 1);
+        }
+        swap(&path[depth], &path[i]); 
+    }
+}
+
+int main() {
+    printf("Enter the number of cities (maximum %d): ", MAXCITIES);
+    scanf("%d", &n);
+    printf("Enter the distance matrix (%d x %d elements):\n", n, n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+    int path[MAXCITIES];
+    for (int i = 0; i < n; i++) {
+        path[i] = i;
+    }
+    tspBranchAndBound(path, 0);
+    printf("Minimum distance for the Traveling Salesman Problem: %d\n", minCost);
+    printf("Optimal Path: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", optimalPath[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
