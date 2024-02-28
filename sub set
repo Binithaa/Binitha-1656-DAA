@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_SIZE 100
+void findSubsets(int arr[], int n, int targetSum, int currentSum, int index, bool subset[]) {
+    if (currentSum == targetSum) {
+        printf("Subset with sum %d: { ", targetSum);
+        for (int i = 0; i < n; i++) {
+            if (subset[i]) {
+                printf("%d ", arr[i]);
+            }
+        }
+        printf("}\n");
+        return;
+    }
+
+    if (index == n) {
+        return;
+    }
+    subset[index] = true;
+    currentSum += arr[index];
+    findSubsets(arr, n, targetSum, currentSum, index + 1, subset);
+    subset[index] = false;
+    currentSum -= arr[index];
+    findSubsets(arr, n, targetSum, currentSum, index + 1, subset);
+}
+
+int main() {
+    int n, targetSum;
+    int arr[MAX_SIZE];
+    printf("Enter the number of elements in the set: ");
+    scanf("%d", &n);
+    printf("Enter the elements of the set:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    printf("Enter the target sum: ");
+    scanf("%d", &targetSum);
+
+    bool subset[MAX_SIZE] = {false}; 
+   printf("Subsets with sum %d:\n", targetSum);
+    findSubsets(arr, n, targetSum, 0, 0, subset);
+
+    return 0;
+}
+
