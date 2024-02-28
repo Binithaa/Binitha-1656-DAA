@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MAX_SIZE 10
+
+int N;
+int costMatrix[MAX_SIZE][MAX_SIZE];
+int assigned[MAX_SIZE];
+int visited[MAX_SIZE];
+int best_cost = INT_MAX;
+int best_assignment[MAX_SIZE];
+
+void branch_and_bound(int node, int total_cost) {
+    if (node == N) {
+        if (total_cost < best_cost) {
+            best_cost = total_cost;
+            for (int i = 0; i < N; i++) {
+                best_assignment[i] = assigned[i];
+            }
+        }
+    } else {
+        for (int j = 0; j < N; j++) {
+            if (!visited[j]) {
+                assigned[node] = j;
+                visited[j] = 1;
+                branch_and_bound(node + 1, total_cost + costMatrix[node][j]);
+                visited[j] = 0;
+            }
+        }
+    }
+}
+
+int main() {
+    printf("Enter the number of workers and jobs (N <= %d): ", MAX_SIZE);
+    scanf("%d", &N);
+    
+    printf("Enter the cost matrix (%d x %d):\n", N, N);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            scanf("%d", &costMatrix[i][j]);
+        }
+    }
+
+    branch_and_bound(0, 0);
+
+    printf("\nInput cost matrix:\n");
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            printf("%d ", costMatrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nMinimum cost: %d\n", best_cost);
+    printf("Assignment: ");
+    for (int i = 0; i < N; i++) {
+        printf("(%d,%d) ", i, best_assignment[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
