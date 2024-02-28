@@ -1,0 +1,23 @@
+#include <stdio.h>
+void printRow(int start, int end) {
+    if (start > end)
+        return;
+
+    printf("%d ", start);
+    printRow(start + 1, end);
+}
+void printPattern(int row, int col) {
+    if (row > col)
+        return;
+
+    printRow(1, row);
+    printf("\n");
+    printPattern(row + 1, col);
+}
+
+int main() {
+    int n = 4; 
+    printPattern(1, n);
+    return 0;
+}
+
